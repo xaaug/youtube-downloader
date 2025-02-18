@@ -1,10 +1,17 @@
 import { Button } from "@carbon/react";
 
-const FetchDataButton: React.FC = () => {
+interface Props {
+    fetchData: () => Promise<void>
+    fetching: boolean
+}
+
+const FetchDataButton: React.FC<Props> = ({fetchData, fetching}) => {
+
+
   return (
     <>
       <div>
-        <Button kind="secondary">Fetch Video</Button>
+        <Button kind="secondary" onClick={fetchData} disabled={fetching}>{fetching ? 'Fetching Video' : 'Fetch Video'}</Button>
       </div>
     </>
   );

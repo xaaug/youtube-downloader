@@ -1,17 +1,27 @@
 import { Dropdown } from "@carbon/react";
 
-const resolutions = [
-  { id: "144p", label: "144p" },
-  { id: "240p", label: "240p" },
-  { id: "360p", label: "360p" },
-  { id: "480p", label: "480p" },
-  { id: "720p", label: "720p (HD)" },
-  { id: "1080p", label: "1080p (Full HD)" },
-  { id: "1440p", label: "1440p (2K)" },
-  { id: "2160p", label: "2160p (4K)" },
-];
+interface Format {
+  format_id: string
+  resolution?: string
+  extension: string
+  fileSize: number
+}
 
-const ResolutionSelect: React.FC = () => {
+
+interface  Props {
+  resolutions: Format[]
+  setSelectedRes: () => void
+}
+
+const ResolutionSelect: React.FC<Props> = ({resolutions, setSelectedRes}) => {
+
+  console.log(resolutions)
+  const resolutionsLabel = resolutions.map((resolution: Format) => ({
+    id: resolution.resolution,
+    label: `${resolution.resolution} - ${Math.round(resolution.fileSize / 1048576).toFixed(2)} MB`,
+  }))
+  console.log(resolutionsLabel)
+
   return (
     <>
       <div>
@@ -19,10 +29,11 @@ const ResolutionSelect: React.FC = () => {
           id="default"
           invalidText="invalid selection"
           titleText=""
-          items={resolutions}
+          items={resolutionsLabel}
           label="Select Resolution"
           type="default"
           warnText="please notice the warning"
+          onChange={({selectedItem}) => setSelectedRes(selectedItem.id)}
         />
       </div>
     </>

@@ -4,13 +4,27 @@ const morgan = require("morgan");
 const { exec } = require("child_process");
 const { promisify } = require("util");
 const { spawn } = require("child_process");
+const ffmpegPath = require("ffmpeg-static");
+const ffmpeg = require("fluent-ffmpeg");
+
+const fs = require("fs");
+const os = require("os");
+const path = require("path");
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5300;
 const execAsync = promisify(exec);
 
+
 // Middleware
-app.use(cors());
+
+const corsOptions = {
+    origin: "*",  // Allow all origins (change this in production)
+    methods: ["GET"],
+    allowedHeaders: ["Content-Type"],
+};
+
+app.use(cors(corsOptions));
 app.use(morgan("dev"));
 app.use(express.json());
 
@@ -23,6 +37,8 @@ const isValidUrl = (url) => {
         return false;
     }
 };
+
+
 
 // Fetch metadata
 const fetchMetadata = async (url) => {
@@ -43,6 +59,7 @@ const fetchMetadata = async (url) => {
                 format_id: format.format_id,
                 resolution: format.format_note,
                 extension: format.ext,
+                fileSize: format.filesize
             })),
         };
     } catch (error) {
@@ -113,6 +130,7 @@ const getFormatIdForResolution = async (url, quality) => {
 };
 
 // Download & Stream with Video Title as Filename
+/*
 const downloadAndStream = async (url, format, quality, res) => {
     try {
         const metadata = await fetchMetadata(url);
@@ -133,10 +151,15 @@ const downloadAndStream = async (url, format, quality, res) => {
             res.setHeader("Content-Length", fileSize); // Add Content-Length header if available
         }
 
+
+// Set FFmpeg path
+        ffmpeg.setFfmpegPath(ffmpegPath);
+
         // Use yt-dlp to download the video
         const process = spawn("yt-dlp", [
             "-f", formatId, // Use the exact format ID
             "--merge-output-format", "mp4",
+            "--ffmpeg-location", ffmpegPath,
             "-o", "-", // Output to stdout
             url,
         ]);
@@ -168,7 +191,80 @@ const downloadAndStream = async (url, format, quality, res) => {
         console.error("Download error:", error);
         res.status(500).json({ error: "Failed to download video" });
     }
+};*/
+
+
+const downloadAndStream = async (url, format, quality, res) => {
+    try {
+        const metadata = await fetchMetadata(url);
+
+
+        console.log("Raw Video Title:", metadata.title);
+
+        const sanitizeFilename = (title) => {
+            return title
+                .normalize("NFD") // Normalize Unicode (removes accents)
+                .replace(/[\u0300-\u036f]/g, "") // Remove diacritics
+                .replace(/[\/:*?"<>|\r\n]+/g, "") // Remove invalid filename characters
+                // .replace(/\s+/g, "_") // Replace spaces with underscores
+                .trim();
+        };
+
+        const safeTitle = sanitizeFilename(metadata.title);
+
+        console.log("Sanitized Video Title:", safeTitle);
+
+        const formatId = await getFormatIdForResolution(url, quality);
+        console.log("Selected Format ID:", formatId);
+
+        // Temporary directory for storing downloads
+        const tempDir = os.tmpdir();
+        const videoPath = path.join(tempDir, `${safeTitle}_video.mp4`);
+        const audioPath = path.join(tempDir, `${safeTitle}_audio.mp4`);
+        const outputPath = path.join(tempDir, `${safeTitle}_final.mp4`);
+
+        // Download video
+        console.log("Downloading video...");
+        await execAsync(`yt-dlp -f ${formatId.split("+")[0]} -o "${videoPath}" "${url}"`);
+
+        // Download audio
+        console.log("Downloading audio...");
+        await execAsync(`yt-dlp -f ${formatId.split("+")[1]} -o "${audioPath}" "${url}"`);
+
+        // Merge video & audio
+        console.log("Merging video and audio...");
+        await new Promise((resolve, reject) => {
+            ffmpeg()
+                .input(videoPath)
+                .input(audioPath)
+                .outputOptions(["-c:v copy", "-c:a aac", "-strict experimental"])
+                .save(outputPath)
+                .on("end", resolve)
+                .on("error", reject);
+        });
+
+        // Set headers for streaming
+        res.setHeader("Content-Disposition", `attachment; filename="${safeTitle}.${format}"`);
+        res.setHeader("Content-Type", `video/${format}`);
+
+        // Stream final video
+        const stream = fs.createReadStream(outputPath);
+        stream.pipe(res);
+
+        // Cleanup files after streaming
+        stream.on("close", () => {
+            fs.unlinkSync(videoPath);
+            fs.unlinkSync(audioPath);
+            fs.unlinkSync(outputPath);
+        });
+
+    } catch (error) {
+        console.error("Download error:", error);
+        res.status(500).json({ error: "Failed to download video" });
+    }
 };
+
+
 
 // Single route using search parameters
 app.get("/", async (req, res) => {
