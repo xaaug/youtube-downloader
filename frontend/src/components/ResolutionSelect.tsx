@@ -1,26 +1,16 @@
 import { Dropdown } from "@carbon/react";
 
-interface Format {
-  format_id: string
-  resolution?: string
-  extension: string
-  fileSize: number
+interface Props {
+  resolutions: string[];
+  setSelectedRes: (resolution: number) => void;
 }
 
+const excludeWords = ["Premium", "storyboard", "low", "medium", "Default"];
 
-interface  Props {
-  resolutions: Format[]
-  setSelectedRes: () => void
-}
-
-const ResolutionSelect: React.FC<Props> = ({resolutions, setSelectedRes}) => {
-
-  console.log(resolutions)
-  const resolutionsLabel = resolutions.map((resolution: Format) => ({
-    id: resolution.resolution,
-    label: `${resolution.resolution} - ${Math.round(resolution.fileSize / 1048576).toFixed(2)} MB`,
-  }))
-  console.log(resolutionsLabel)
+const ResolutionSelect: React.FC<Props> = ({ resolutions, setSelectedRes }) => {
+  const resolutionsLabel = resolutions.filter((reso: string) => !excludeWords.includes(reso))
+    .reverse()
+    .map((reso: string) => ({ id: reso.replace(/p$/, ''), label: reso }));
 
   return (
     <>
@@ -33,7 +23,8 @@ const ResolutionSelect: React.FC<Props> = ({resolutions, setSelectedRes}) => {
           label="Select Resolution"
           type="default"
           warnText="please notice the warning"
-          onChange={({selectedItem}) => setSelectedRes(selectedItem.id)}
+          // @ts-ignore
+          onChange={({ selectedItem }) => setSelectedRes(selectedItem.id)}
         />
       </div>
     </>
