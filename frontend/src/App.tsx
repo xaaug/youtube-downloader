@@ -1,19 +1,14 @@
-import Header from "./components/Header.tsx";
-import Hero from "./components/Hero.tsx";
-import DownloadVideo from "./components/DownloadVideo.tsx";
+// import Header from "./components/Header";
+import DownloadVideo from "./components/Download/DownloadVideo";
 
 const App: React.FC = () => {
   return (
-    <>
-      <Header />
-      <main className="px-6 my-12">
-        <Hero />
-
-        <div className="my-6">
-          <DownloadVideo />
-        </div>
+    <div className="app-root">
+      {/* <Header /> */}
+      <main className="main-content">
+        <DownloadVideo />
       </main>
-    </>
+    </div>
   );
 };
 

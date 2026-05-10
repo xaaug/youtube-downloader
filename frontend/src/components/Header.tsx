@@ -1,16 +1,12 @@
 const Header: React.FC = () => {
   return (
-    <>
-      <header className="bg-[#161616] py-3 flex items-center justify-center">
-        <nav>
-          <p className="font-mono font-semibold text-white text-xl">
-            Youtube Downloader
-          </p>
-        </nav>
-      </header>
-    </>
+    <header className="dl-header">
+      <div className="dl-header__logo">
+        DL<span>.</span>
+      </div>
+      <span className="dl-header__badge">v2.0 · yt-dlp</span>
+    </header>
   );
 };
 
 export default Header;
-//

@@ -5,7 +5,7 @@ interface Props {
     fetching: boolean
 }
 
-const FetchDataButton: React.FC<Props> = ({fetchData, fetching}) => {
+const FetchButton: React.FC<Props> = ({fetchData, fetching}) => {
 
 
   return (
@@ -17,4 +17,4 @@ const FetchDataButton: React.FC<Props> = ({fetchData, fetching}) => {
   );
 };
 
-export default FetchDataButton;
+export default FetchButton;
