@@ -28,7 +28,7 @@ const DownloadVideo: React.FC = () => {
       {/* HERO */}
       <div className="dl-hero">
         <h1 className="dl-hero__title">
-          <span className="text-gray-500">Download</span><br />
+          <span className="">Download</span><br />
           <strong>anything.</strong>
         </h1>
         <p className="dl-hero__sub">

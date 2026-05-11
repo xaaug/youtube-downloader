@@ -21,6 +21,12 @@ app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
 
+// ── Spotify router ──────────────────────────────────────────────────────────
+// Requires: SPOTIFY_CLIENT_ID + SPOTIFY_CLIENT_SECRET in env
+require('dotenv').config();
+const spotifyRouter = require('./spotify');
+app.use('/spotify', spotifyRouter);
+
 // ======================================================
 // IN-MEMORY PROGRESS STORE
 // ======================================================
@@ -233,7 +239,7 @@ const getFormatIdForResolution = (formats, quality) => {
 // DOWNLOAD SINGLE VIDEO (MP4 or MP3)
 // ======================================================
 
-const downloadAndStream = async (url, quality, format, res, downloadId) => {
+const downloadAndStream = async (url, quality, format, res, downloadId, startTime = null, endTime = null) => {
   const fs = require("fs");
   const path = require("path");
 
@@ -291,7 +297,18 @@ const downloadAndStream = async (url, quality, format, res, downloadId) => {
       ];
     }
 
-    // Collect all stderr for error reporting
+    // Inject trim/clip args if provided
+    if (startTime || endTime) {
+      // yt-dlp --download-sections '*START-END' then ffmpeg re-encode for accuracy
+      const start = startTime || '0';
+      const end = endTime || 'inf';
+      ytDlpArgs.splice(ytDlpArgs.length - 1, 0,
+        '--download-sections', `*${start}-${end}`,
+        '--force-keyframes-at-cuts',
+      );
+    }
+
+        // Collect all stderr for error reporting
     let stderrLog = "";
 
     // yt-dlp writes to temp dir
@@ -502,7 +519,7 @@ app.get("/progress/:id", (req, res) => {
 // ======================================================
 
 app.get("/", async (req, res) => {
-  const { url, action, quality, format } = req.query;
+  const { url, action, quality, format, startTime, endTime } = req.query;
 
   if (!url || !isValidUrl(url)) {
     return res.status(400).json({ error: "Invalid or missing URL" });
@@ -528,7 +545,7 @@ app.get("/", async (req, res) => {
         if (playlist) {
           return await downloadPlaylist(url, quality, format || "mp4", res, downloadId);
         } else {
-          return await downloadAndStream(url, quality, format || "mp4", res, downloadId);
+          return await downloadAndStream(url, quality, format || "mp4", res, downloadId, startTime || null, endTime || null);
         }
       }
 
