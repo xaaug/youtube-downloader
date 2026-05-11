@@ -329,7 +329,7 @@ export default function SpotifyPage({ onAmbient }: Props) {
                       className={`tr${sel ? " sel" : ""}`}
                       onClick={() => !running && toggle(t.id)}
                     >
-                      <div className="tr__chk">{sel && "✓"}</div>
+                      <div className="tr__chk">{sel && <XIcon />}</div>
                       <span className="tr__n">{i + 1}</span>
                       {t.artworkSmall ? (
                         <img
@@ -402,12 +402,11 @@ export default function SpotifyPage({ onAmbient }: Props) {
         </div>
       )}
 
-      {!data && !fetching && (
+      {/* {!data && !fetching && (
         <div className="empty">
           <p>Paste a Spotify URL above to get started</p>
-         
         </div>
-      )}
+      )} */}
     </>
   );
 }

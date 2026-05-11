@@ -70,11 +70,17 @@ export default function App() {
   return (
     <>
       {/* Ambient BG */}
+<div className={`ambient-bg ${ambientUrl ? " visible" : ""}`}>
+  {ambientUrl && (
+    <>
       <div
-        className={`ambient-bg${ambientUrl ? " visible" : ""}`}
-        style={ambientUrl ? { backgroundImage: `url(${ambientUrl})` } : undefined}
+        className="ambient-bg__img"
+        style={{ backgroundImage: `url(${ambientUrl})` }}
       />
-
+      <div className="ambient-bg__overlay" />
+    </>
+  )}
+</div>
       <div className="app">
         <Nav
           tab={tab}
