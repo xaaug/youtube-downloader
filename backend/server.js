@@ -24,7 +24,7 @@ app.use(express.json());
 // ── Spotify router ──────────────────────────────────────────────────────────
 // Requires: SPOTIFY_CLIENT_ID + SPOTIFY_CLIENT_SECRET in env
 require('dotenv').config();
-const spotifyRouter = require('./spotify');
+const { router: spotifyRouter } = require('./spotify');
 app.use('/spotify', spotifyRouter);
 
 // ======================================================

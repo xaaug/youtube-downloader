@@ -1,24 +1,17 @@
 type Tab = "youtube" | "spotify";
+interface Props { tab: Tab; onTab: (t: Tab) => void; onHistory: () => void; }
 
-interface Props {
-  tab: Tab;
-  onTab: (t: Tab) => void;
+export default function Nav({ tab, onTab, onHistory }: Props) {
+  return (
+    <nav className="nav">
+      <div className="nav__mark">dl<em>.</em></div>
+      <div className="nav__tabs">
+        <button className={`nav__tab${tab === "youtube" ? " active" : ""}`} onClick={() => onTab("youtube")}>YouTube</button>
+        <button className={`nav__tab${tab === "spotify" ? " active" : ""}`} onClick={() => onTab("spotify")}>Spotify</button>
+      </div>
+      <div className="nav__right">
+        <button className="nav__history-btn" onClick={onHistory}>History</button>
+      </div>
+    </nav>
+  );
 }
-
-const Nav: React.FC<Props> = ({ tab, onTab }) => (
-  <nav className="nav">
-    <div className="nav__wordmark">dl<em>.</em></div>
-    <div className="nav__tabs">
-      <button className={`nav__tab${tab === "youtube" ? " active" : ""}`} onClick={() => onTab("youtube")}>
-        <span className="nav__tab-dot" />
-        YouTube
-      </button>
-      <button className={`nav__tab${tab === "spotify" ? " active" : ""}`} onClick={() => onTab("spotify")}>
-        <span className="nav__tab-dot" />
-        Spotify
-      </button>
-    </div>
-  </nav>
-);
-
-export default Nav;
