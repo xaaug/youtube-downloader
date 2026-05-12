@@ -1,3 +1,6 @@
+require('dotenv').config();
+
+
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
@@ -17,13 +20,19 @@ const execAsync = promisify(exec);
 // MIDDLEWARE
 // ======================================================
 
-app.use(cors());
+const allowedOrigin = process.env.FRONTEND_URL || "*";
+app.use(cors({
+  origin: allowedOrigin === "*"
+    ? "*"
+    : (origin, cb) => (!origin || origin === allowedOrigin ? cb(null, true) : cb(new Error("Not allowed by CORS"))),
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type"],
+}));
 app.use(morgan("dev"));
 app.use(express.json());
 
 // ── Spotify router ──────────────────────────────────────────────────────────
 // Requires: SPOTIFY_CLIENT_ID + SPOTIFY_CLIENT_SECRET in env
-require('dotenv').config();
 const { router: spotifyRouter } = require('./spotify');
 app.use('/spotify', spotifyRouter);
 
