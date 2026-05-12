@@ -144,7 +144,8 @@ const searchYouTube = async (track, artist) => {
   // ytsearch returns a container with entries[], OR a single video object
   const entry = d.entries?.[0] ?? d;
   const videoId = entry?.id;
-  if (!videoId || videoId.length < 5) throw new Error("No YouTube result found");
+  if (!videoId || videoId.length < 5)
+    throw new Error("No YouTube result found");
 
   return `https://www.youtube.com/watch?v=${videoId}`;
 };

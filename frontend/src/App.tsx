@@ -60,7 +60,9 @@ export default function App() {
   }, []);
 
   const handleClipUse = (url: string) => {
-    if (url.includes("spotify.com")) setTab("spotify");
+    if (url.includes("spotify.com")) {setTab("spotify")
+      window.dispatchEvent(new CustomEvent("dl:paste-url", { detail: url }))
+    }
     else setTab("youtube");
     setClipToast(null);
     // signal to pages via custom event

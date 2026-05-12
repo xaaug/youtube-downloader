@@ -117,7 +117,7 @@ input {
   inset: -5%;
   background-size: cover;
   background-position: center;
-  filter: blur(20px);
+  filter: blur(5px);
   transform: scale(1.1);
   opacity: 0.5;
 }
@@ -214,7 +214,7 @@ input {
 }
 
 .nav__history-btn {
-  font-size: 0.9rem;
+  font-size: 0.7rem;
   font-family: var(--mono);
   letter-spacing: 0.08em;
   color: var(--dim);
@@ -813,12 +813,12 @@ input {
   justify-content: center;
 }
 .sp-card__name {
-  font-family: var(--serif);
+  font-family: var(--mono);
   font-size: 1.2rem;
   color: var(--bg);
 }
 .sp-card__meta {
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   font-family: var(--mono);
   color: var(--muted);
 }
@@ -913,7 +913,7 @@ input {
   min-width: 0;
 }
 .tr__name {
-  font-size: 0.75rem;
+  font-size: 1rem;
   font-family: var(--mono);
   color: var(--bg);
   white-space: nowrap;
@@ -921,7 +921,7 @@ input {
   text-overflow: ellipsis;
 }
 .tr__artist {
-  font-size: 0.6rem;
+  font-size: 0.8rem;
   font-family: var(--mono);
   margin-top: 5px;
   color: var(--muted);
@@ -931,7 +931,7 @@ input {
 }
 
 .tr__dur {
-  font-size: 0.75rem;
+  font-size: 1rem;
   font-family: var(--mono);
   color: var(--muted);
   flex-shrink: 0;
@@ -947,21 +947,21 @@ input {
   gap: 4px;
 }
 .ts {
-  font-size: 9px;
+  font-size: 12px;
   font-family: var(--mono);
   letter-spacing: 0.04em;
 }
 .ts.idle {
-  color: var(--muted);
-}
-.ts.queued {
   color: var(--dim);
 }
+.ts.queued {
+  color: var(--muted);
+}
 .ts.active {
-  color: var(--text);
+  color: var(--bg);
 }
 .ts.done {
-  color: var(--sub);
+  color: var(--dim);
 }
 .ts.error {
   color: var(--err);
@@ -977,12 +977,13 @@ input {
 .sp-foot__info {
   font-size: 10px;
   color: var(--muted);
+  font-family: var(--mono);
   flex: 1;
 }
 .sp-dl-btn {
   padding: 10px 20px;
   background: var(--white);
-  color: #0a0a0a;
+  color: var(--bg);
   font-family: var(--mono);
   font-size: 0.75rem;
   font-weight: 500;
@@ -1003,7 +1004,7 @@ input {
 }
 .sp-dl-btn:disabled {
   background: var(--surface);
-  color: var(--muted);
+  color: var(--sub);
   cursor: default;
   border: 1px solid var(--border-hi);
 }
@@ -1017,16 +1018,16 @@ input {
 .batch-bar__row {
   display: flex;
   justify-content: space-between;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   font-family: var(--mono);
   color: var(--muted);
   margin-bottom: 6px;
 }
 .batch-bar__row span:last-child {
-  color: var(--text);
+  color: var(--muted);
 }
 .batch-bar__track {
-  height: 1px;
+  height: 0px;
   background: var(--border-hi);
 }
 .batch-bar__fill {
@@ -1125,6 +1126,7 @@ input {
 .hist-item__title {
   font-size: 0.8rem;
   color: var(--bg);
+  font-family: var(--mono);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
