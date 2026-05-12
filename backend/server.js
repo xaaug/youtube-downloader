@@ -9,7 +9,7 @@ const { v4: uuidv4 } = require("uuid");
 
 const app = express();
 
-const PORT = process.env.PORT || 5300;
+const PORT = process.env.PORT || 10000;
 
 const execAsync = promisify(exec);
 
@@ -556,6 +556,15 @@ app.get("/", async (req, res) => {
     console.error("Internal server error:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
+});
+
+app.get("/ping", (req, res) => {
+  res.status(200).json({
+    status: "ok",
+    message: "Server alive",
+    uptime: process.uptime(),
+    timestamp: Date.now()
+  });
 });
 
 // ======================================================
