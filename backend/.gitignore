@@ -1,0 +1,23 @@
+# Environment
+.env
+*.env.local
+
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Build output
+dist/
+*/dist/
+build/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temp downloads
+/tmp/
