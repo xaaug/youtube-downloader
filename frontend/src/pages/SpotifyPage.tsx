@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { addToHistory } from "../App";
 import { CheckIcon, XIcon } from "lucide-react";
 
-const BASE = import.meta.env.VITE_API_URL || "http://localhost:5300";
+const BASE = import.meta.env.VITE_API_URL || "http://localhost:53000";
 
 const genId = () =>
   crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2);
