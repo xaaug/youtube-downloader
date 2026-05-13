@@ -98,6 +98,7 @@ export default function SpotifyPage({ onAmbient }: Props) {
         throw new Error(t);
       }
       const d: SpData = await r.json();
+      console.log(d)
       setData(d);
       setSelected(new Set(d.tracks.map((t) => t.id)));
       onAmbient(d.art || d.tracks[0]?.artwork || null);
@@ -293,7 +294,25 @@ export default function SpotifyPage({ onAmbient }: Props) {
                 {data.isSingle ? "Single track" : `${data.total} tracks`}
               </p>
             </div> */}
-            <iframe data-testid="embed-iframe" style={{borderRadius: "none"}} src={`https://open.spotify.com/embed/track/${data.tracks[0].id}?utm_source=generator`} width="100%" height="152" frameBorder="0"  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+           
+            {!data.isSingle ? <>
+              {data.art && <img className="sp-card__art" src={data.art} alt="" />}
+            <div className="sp-card__info">
+              <p className="sp-card__name">{data.name}</p>
+              <p className="sp-card__meta">
+                {data.owner && `${data.owner} · `}
+                {data.isSingle ? "Single track" : `${data.total} tracks`}
+              </p>
+            </div></> :  <iframe
+              data-testid="embed-iframe"
+              style={{ borderRadius: "none" }}
+              src={`https://open.spotify.com/embed/track/${data.tracks[0].id}?utm_source=generator`}
+              width="100%"
+              height="152"
+              frameBorder="0"
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              loading="lazy"
+            ></iframe>}
           </div>
 
           {/* FORMAT */}
@@ -326,32 +345,44 @@ export default function SpotifyPage({ onAmbient }: Props) {
                   const s = states[t.id];
                   const sel = selected.has(t.id);
                   return (
-                    <div
-                      key={t.id}
-                      className={`tr${sel ? " sel" : ""}`}
-                      onClick={() => !running && toggle(t.id)}
-                    >
-                      <div className="tr__chk">{sel && <XIcon />}</div>
-                      <span className="tr__n">{i + 1}</span>
-                      {t.artworkSmall ? (
-                        <img
-                          className="tr__art"
-                          src={t.artworkSmall}
-                          alt=""
-                          loading="lazy"
-                        />
-                      ) : (
-                        <div className="tr__art" />
-                      )}
-                      <div className="tr__info">
-                        <div className="tr__name">{t.name}</div>
-                        <div className="tr__artist">{t.artist}</div>
+                    <>
+                      <div
+                        key={t.id}
+                        className={`tr${sel ? " sel" : ""}`}
+                        onClick={() => !running && toggle(t.id)}
+                      >
+                        <div className="tr__chk">{sel && <XIcon />}</div>
+                        <span className="tr__n">{i + 1}</span>
+                        {t.artworkSmall ? (
+                          <img
+                            className="tr__art"
+                            src={t.artworkSmall}
+                            alt=""
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="tr__art" />
+                        )}
+                        <div className="tr__info">
+                          <div className="tr__name">{t.name}</div>
+                          <div className="tr__artist">{t.artist}</div>
+                        </div>
+                        <span className="tr__dur">{fmtDur(t.duration)}</span>
+                        <div className="tr__status">
+                          <TrackBadge state={s} />
+                        </div>
                       </div>
-                      <span className="tr__dur">{fmtDur(t.duration)}</span>
-                      <div className="tr__status">
-                        <TrackBadge state={s} />
-                      </div>
-                    </div>
+                      <iframe
+                        data-testid="embed-iframe"
+                        style={{ borderRadius: "none" }}
+                        src={`https://open.spotify.com/embed/track/${t.id}?utm_source=generator`}
+                        width="100%"
+                        height="152"
+                        frameBorder="0"
+                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                        loading="lazy"
+                      ></iframe>
+                    </>
                   );
                 })}
               </div>
