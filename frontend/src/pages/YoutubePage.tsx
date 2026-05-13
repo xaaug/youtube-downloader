@@ -225,6 +225,7 @@ export default function YouTubePage({ onAmbient }: Props) {
           onKeyDown={(e) => e.key === "Enter" && loadMeta()}
           spellCheck={false}
           autoComplete="off"
+          autoFocus
         />
         <button className="url-bar__go" onClick={loadMeta} disabled={!canFetch}>
           {fetching ? (

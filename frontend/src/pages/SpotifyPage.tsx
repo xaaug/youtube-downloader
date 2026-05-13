@@ -264,6 +264,7 @@ export default function SpotifyPage({ onAmbient }: Props) {
           onKeyDown={(e) => e.key === "Enter" && load()}
           spellCheck={false}
           autoComplete="off"
+          autoFocus
         />
         <button className="url-bar__go" onClick={load} disabled={!canFetch}>
           {fetching ? (
