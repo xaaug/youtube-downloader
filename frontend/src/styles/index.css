@@ -833,7 +833,7 @@ input {
   margin-bottom: 2px;
 }
 .tl-count {
-  font-size: 0.65rem;
+  font-size: 0.85rem;
   color: var(--muted);
   font-family: var(--mono);
   letter-spacing: 0.06em;

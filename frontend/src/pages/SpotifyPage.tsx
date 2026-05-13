@@ -250,8 +250,7 @@ export default function SpotifyPage({ onAmbient }: Props) {
           Playlist <em>to files.</em>
         </h1>
         <p className="pg-head__sub">
-          Paste a playlist, album, or track link. Matched on YouTube, tagged
-          with Spotify metadata.
+          Paste a playlist, album, or track link.
         </p>
       </div>
 
