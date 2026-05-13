@@ -285,14 +285,15 @@ export default function SpotifyPage({ onAmbient }: Props) {
         <div>
           {/* COLLECTION CARD */}
           <div className="sp-card anim-up">
-            {data.art && <img className="sp-card__art" src={data.art} alt="" />}
+            {/* {data.art && <img className="sp-card__art" src={data.art} alt="" />}
             <div className="sp-card__info">
               <p className="sp-card__name">{data.name}</p>
               <p className="sp-card__meta">
                 {data.owner && `${data.owner} · `}
                 {data.isSingle ? "Single track" : `${data.total} tracks`}
               </p>
-            </div>
+            </div> */}
+            <iframe data-testid="embed-iframe" style={{borderRadius: "none"}} src={`https://open.spotify.com/embed/track/${data.tracks[0].id}?utm_source=generator`} width="100%" height="152" frameBorder="0"  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
           </div>
 
           {/* FORMAT */}
